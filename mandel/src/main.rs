@@ -35,10 +35,7 @@ fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
 }
 
 fn parse_complex(s: &str) -> Option<Complex<f64>> {
-    match parse_pair(s, ',') {
-        Some((re, im)) => Some(Complex { re, im }),
-        None => None
-    }
+    parse_pair(s,',').map(|(re, im)| Complex { re, im })
 }
 
 fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, lower_right: Complex<f64>) {
@@ -48,10 +45,9 @@ fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, l
         for column in 0..bounds.0 {
             let point: Complex<f64> = pixel_to_point(bounds, (column, row), upper_left, lower_right);
 
-            pixels[row * bounds.0 + column] = match escape_time(point, 255) {
-                None => 0,
-                Some(count) => 255 - count as u8
-            };
+            pixels[row * bounds.0 + column] = escape_time(point, 255)
+                .map(|count| 255 - count as u8)
+                .unwrap_or(0);
         }
     }
 }
