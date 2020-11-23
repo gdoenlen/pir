@@ -21,7 +21,7 @@ fn main() {
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
     render(&mut pixels, bounds, upper_left, lower_right);
-    write_image(&args[1], &pixels, bounds).expect("error writing image file.");
+    write_image(&args[1], &pixels, bounds);
 }
 
 fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
@@ -79,10 +79,9 @@ fn escape_time(c: Complex<f64>, limit: u32) -> Option<u32> {
     None
 }
 
-fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<(), std::io::Error> {
-    let output: File = File::create(filename)?;
+fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) {
+    let output: File = File::create(filename).unwrap();
     let encoder: PngEncoder<File> = PngEncoder::new(output);
-    encoder.encode(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::L8).unwrap();
 
-    Ok(())
+    encoder.encode(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::L8).unwrap();
 }
