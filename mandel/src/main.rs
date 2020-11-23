@@ -1,7 +1,7 @@
 extern crate num;
 extern crate image;
 
-use image::{ColorType, png::PngEncoder};
+use image::{ColorType, codecs::png::PngEncoder};
 use num::Complex;
 
 use std::{fs::File, str::FromStr};
@@ -39,7 +39,7 @@ fn parse_complex(s: &str) -> Option<Complex<f64>> {
 }
 
 fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, lower_right: Complex<f64>) {
-    assert!(pixels.len() == bounds.0 * bounds.1);
+    assert_eq!(pixels.len(), bounds.0 * bounds.1);
 
     for row in 0..bounds.1 {
         for column in 0..bounds.0 {
